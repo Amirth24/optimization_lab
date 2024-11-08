@@ -57,6 +57,7 @@ class ACOTSP:
         self.n_nodes = g.number_of_nodes()
 
         distances = nx.to_numpy_array(g)
+        print(distances)
 
         self.visibility = zero_divide(np.ones_like(distances), distances)
 
@@ -101,7 +102,7 @@ class ACOTSP:
         self.compute_probabilities(visited)
 
         while True:
-            prev = current
+            prev = int(current)
 
             current = np.random.choice(self.n_nodes, p = self.prob[current])
 
@@ -127,6 +128,7 @@ class ACOTSP:
 
     def run(self, n_iter = 1):
         self.initialize_ants()
+        self.min_path = None
         for t in range(n_iter):
             self.paths = [[None]] * self.n_ants
 
@@ -142,7 +144,8 @@ class ACOTSP:
             ]
 
 
-            print(f"Iteration {t}: Best path: {self.best_path} with length {self.best_path_length}")
+            if t % 10 == 0:
+                print(f"Iteration {t}: Best path: {self.best_path} with length {self.best_path_length}")
 
 
     @property
@@ -153,11 +156,11 @@ class ACOTSP:
     def best_path(self):
         if not hasattr(self, "hamiltonian_paths") or len(self.hamiltonian_paths) == 0:
             return None
-        return min(self.hamiltonian_paths, key=self.path_length)
+        return min(self.hamiltonian_paths if self.min_path is None else [self.min_path, *self.hamiltonian_paths] , key=self.path_length)
 
 
 
-g = generate_random_weighted_graph(6, 10, 50)
+g = generate_random_weighted_graph(4, 10, 50)
 
 
 acotsp_solver = ACOTSP(g, n_ants=100, alpha=1, beta=5, Q=100, rho=.4)

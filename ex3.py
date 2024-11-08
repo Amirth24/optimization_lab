@@ -1,21 +1,24 @@
-from numpy import asarray, exp 
+from numpy import asarray, exp
 from numpy.random import randn, rand, seed
+import numpy as np
 
 def objective(x):
     return x[0]**2.0
 
 def simulate_annealing(
         objective,
-        bounds, 
-        n_iterations, 
+        bounds,
+        n_iterations,
         step_size,
         temp
         ):
 
-    best =  bounds[:, 0] + rand(len(bounds)) * (bounds[:, 1] - bounds[:, 0])
+    best = np.random.uniform(bounds[:, 0], bounds[:, 1])
+
     best_eval = objective(best)
 
     curr, curr_eval = best, best_eval
+
 
     for i in range(n_iterations):
         candidate = curr + rand(len(bounds)) * step_size
@@ -45,9 +48,9 @@ temp = 10
 print("Started Simulated Annealing Algorithm")
 best, score = simulate_annealing(
 
-        objective, 
-        bounds, 
-        n_iterations, 
+        objective,
+        bounds,
+        n_iterations,
         step_size,
         temp
     )

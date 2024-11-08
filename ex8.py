@@ -3,8 +3,8 @@ import numpy as np
 def opt_func(x):
     return np.sqrt(np.sum(np.square(x)))
 
-def gen_frogs(frongs, dim, sigma, mu):
-    return np.random.normal(mu, sigma, (frongs, dim))
+def gen_frogs(frogs, dim, sigma, mu):
+    return np.random.normal(mu, sigma, (frogs, dim))
 
 def sort_frog(frogs, mplx_no, opt_func):
     fitness = np.array([opt_func(frog) for frog in frogs])
