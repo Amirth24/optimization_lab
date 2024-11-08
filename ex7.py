@@ -16,9 +16,9 @@ class TS:
 
 
     def input_data(self):
-        return pd.read_csv(self.path, names={
+        return pd.read_csv(self.path, names=[
             "job", "weight", "processing_time","due_date"
-        }, index_col=0).to_dict("index")
+        ], index_col=0).to_dict("index")
 
     def get_tabu_structure(self):
         return {
@@ -31,8 +31,9 @@ class TS:
         }
 
     def get_initial_solution(self):
-        n_jobs = len(self.instance_dict)
-        return np.random.permutation(n_jobs)
+        arr = np.array(list(self.instance_dict.keys()))
+        np.random.shuffle(arr)
+        return arr
 
     def obj_func(self, solution):
         dict = self.instance_dict
@@ -52,6 +53,8 @@ class TS:
 
     def swap_move(self, solution, i, j):
         new_solution = np.copy(solution)
+        i = np.where(new_solution == i)[0][0]
+        j = np.where(new_solution == j)[0][0]
         new_solution[[i, j]] = new_solution[[j, i]]
         return new_solution
 
@@ -69,7 +72,7 @@ class TS:
         terminate = 0
         while terminate  < 100:
 
-            if iter % 10 == 0:
+            if iter < 10:
                 print(f"Iteration {iter}: best value: {best_obj_val:.3f}")
 
             for move in tabu_str:
@@ -113,9 +116,9 @@ class TS:
                         tabu_str[best_move]["move_val"] = np.inf
                         continue
 
-                    print("Tabu search terminated")
-                    print("Performed Iterations:", iter, "Best Solution:", best_solution, "Best Value: ", best_obj_val, sep="\n")
-                    return tabu_str, best_solution, best_obj_val
+        print("Tabu search terminated")
+        print("Performed Iterations:", iter, "Best Solution:", best_solution, "Best Value: ", best_obj_val, sep="\n")
+        return tabu_str, best_solution, best_obj_val
 
 print("Tabu search started")
 
